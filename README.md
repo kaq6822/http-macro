@@ -10,6 +10,6 @@ python app.py
 
 ## Features
 
-- Choose URL and method, add headers and request body.
+- Choose URL and method, add headers, cookies, and request body.
 - Schedule multiple requests by selecting hour, minute, second, and millisecond.
 - Review response history with headers and body details.

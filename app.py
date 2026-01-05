@@ -55,9 +55,13 @@ class HttpMacroApp:
         headers_scrollbar.grid(row=0, column=1, sticky="ns")
         self.headers_text.configure(yscrollcommand=headers_scrollbar.set)
 
-        ttk.Label(frame, text="Body").grid(row=2, column=0, sticky="nw", pady=(6, 0))
+        ttk.Label(frame, text="Cookies (name=value; ...)").grid(row=2, column=0, sticky="nw", pady=(6, 0))
+        self.cookies_entry = ttk.Entry(frame)
+        self.cookies_entry.grid(row=2, column=1, columnspan=3, sticky="ew", padx=6, pady=(6, 0))
+
+        ttk.Label(frame, text="Body").grid(row=3, column=0, sticky="nw", pady=(6, 0))
         body_container = ttk.Frame(frame)
-        body_container.grid(row=2, column=1, columnspan=3, sticky="ew", padx=6, pady=(6, 0))
+        body_container.grid(row=3, column=1, columnspan=3, sticky="ew", padx=6, pady=(6, 0))
         body_container.columnconfigure(0, weight=1)
         self.body_text = tk.Text(body_container, height=6, width=60)
         self.body_text.grid(row=0, column=0, sticky="ew")
@@ -66,7 +70,7 @@ class HttpMacroApp:
         self.body_text.configure(yscrollcommand=body_scrollbar.set)
 
         self.send_button = ttk.Button(frame, text="Send Request", command=self.send_request_threaded)
-        self.send_button.grid(row=3, column=3, sticky="e", pady=6)
+        self.send_button.grid(row=4, column=3, sticky="e", pady=6)
 
     def _build_schedule_frame(self) -> None:
         frame = ttk.LabelFrame(self.root, text="Schedule")
@@ -207,6 +211,9 @@ class HttpMacroApp:
         except ValueError as exc:
             self._append_response("Error", str(exc), "")
             return
+        cookies = self.cookies_entry.get().strip()
+        if cookies:
+            headers["Cookie"] = cookies
 
         data = body_text.encode("utf-8") if body_text else None
         request = Request(url=url, method=method, headers=headers, data=data)
